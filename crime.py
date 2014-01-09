@@ -12,7 +12,7 @@ DIRECTORY = 'all_results'
 
 def randomsleep():
     'Sleep between zero and 100 seconds.'
-    sleep(100 * betavariate(0.7, 8))
+    sleep(10 * betavariate(0.7, 8))
 
 def table():
     '''
@@ -92,12 +92,14 @@ def features(startPageToken = None):
     if startPageToken:
         pageToken = startPageToken
     else:
+        print('Loading data for the inial search, without pageToken')
         results = page()
         for result in results.get('features', []):
             yield result
         pageToken = results.get('nextPageToken')
 
     while pageToken:
+        print('Loading data for pageToken', pageToken)
         results = page(pageToken)
         for result in results.get('features', []):
             yield result
