@@ -104,28 +104,27 @@ def geojson(table_id, select):
         'features': list(features(table_id, select)),
     }
 
-def head():
-    for table_id, select in [
-         ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
-         ('02378420399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR'),
-    ]:
-        fn = 'head-%s.geojson' % table_id
-        if not os.path.exists(fn):
-            fp = open(fn, 'xb')
-            r = table_features(table_id, select, maxResults = 10)
-            fp.write(r.content)
-            fp.close()
+def head(table_id, select):
+    path = 'head-%s.geojson' % table_id
+    if not os.path.exists(path):
+        fp = open(path, 'xb')
+        r = table_features(table_id, select, maxResults = 10)
+        fp.write(r.content)
+        fp.close()
+
+def body(table_id, select):
+    path = os.path.join('data',table_id + '.geojson')
+    if not os.path.exists(path):
+        data = geojson(table_id, select)
+        json.dump(data, open(path, 'x'))
 
 def main():
     for table_id, select in [
          ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
          ('02378420399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR'),
     ]:
-        path = os.path.join('data',table_id + '.geojson')
-        if not os.path.exists(path):
-            data = geojson(table_id, select)
-            json.dump(data, open(path, 'x'))
+        head(table_id, select)
+        body(table_id, select)
 
 if __name__ == '__main__':
-    # head()
     main()
