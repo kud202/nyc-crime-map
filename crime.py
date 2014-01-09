@@ -15,7 +15,13 @@ def randomsleep():
     sleep(100 * betavariate(0.7, 8))
 
 def table():
+    '''
+    This would tell us the schema, among other things.
+    https://developers.google.com/maps-engine/documentation/reference/v1/tables#resource
+    '''
+
     raise NotImplementedError('This doesn\'t work.')
+
     url = 'https://www.googleapis.com/mapsengine/v1/tables/02378420399528461352-11853667273131550346/'
     params = {
         'key': KEY,
@@ -48,11 +54,6 @@ def table_features(select, where = None, maxResults = 1000, pageToken = None):
 
     r = requests.get(url, headers = headers, params = params)
     return r
-
-
-
-#r = table()
-
 
 def head():
     fn = 'head.geojson'
@@ -109,7 +110,11 @@ def geojson():
         'features': list(features()),
     }
 
+def main():
+    fn = 'crime.geojson'
+    if not os.path.exists(fn):
+        data = geojson()
+        json.dump(data, open(fn, 'x'))
+
 if __name__ == '__main__':
-    head()
-    data = geojson()
-    json.dump(data, open('data.geojson', 'x'))
+    main()
