@@ -8,7 +8,7 @@ from random import betavariate
 import requests
 
 KEY = 'AIzaSyDW3Wvk6xWLlLI6Bfu29DuDaseX-g18_mo'
-DIRECTORY = 'all_results'
+DIRECTORY = os.path.join('data', 'all_results')
 
 def randomsleep():
     'Sleep between zero and 100 seconds.'
