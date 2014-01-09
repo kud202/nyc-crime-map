@@ -21,7 +21,7 @@ def query(select, where, maxResults = 1000):
     }
 
     r = requests.get(url, headers = headers, params = params)
-    return json.loads(r.text)
+    return r
 
 select = 'geometry,TOT,X,Y'
 where = '''MO=10 AND YR=2013 AND ST_INTERSECTS(geometry,ST_GEOMFROMTEXT('POLYGON((-73.92023205757141 40.7721081261999,-73.94100308418274 40.7721081261999,-73.94100308418274 40.76678598068301,-73.92023205757141 40.76678598068301,-73.92023205757141 40.7721081261999))')) AND X<>0 AND Y<>0'''
