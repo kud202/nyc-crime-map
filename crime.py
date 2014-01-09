@@ -55,22 +55,25 @@ def head():
         fp.write(r.content)
         fp.close()
 
+def mkpath(pageToken):
+    filename = pageToken if pageToken else '__emptyToken__'
+    return os.path.join(DIRECTORY, filename)
+
 def mkfp(pageToken, mode = 'xb'):
-    return open(os.path.join(DIRECTORY, pageToken), mode)
+    return open(mkpath(pageToken), mode)
 
 def page(pageToken = None):
     '''
     Args: A pageToken or None
     Returns: The next pageToken or None
     '''
-    filename = pageToken if pageToken else '__emptyToken__'
 
-    path = os.path.join('all_results', filename)
+    path = mkpath(pageToken)
     if os.path.exists(path):
         return json.load(open(path))
     else:
         r = table_features('YR,MO,geometry,TOT,X,Y', maxResults = 1000, pageToken = pageToken)
-        fp = mkfp(filename, mode = 'xb')
+        fp = mkfp(pageToken, mode = 'xb')
         fp.write(r.content)
         fp.close()
         return json.loads(r.text)
