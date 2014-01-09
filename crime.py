@@ -85,14 +85,14 @@ def features(table_id, select, startPageToken = None):
         pageToken = startPageToken
     else:
         print('Loading data for the inial search, without pageToken')
-        results = page(table_id)
+        results = page(table_id, select)
         for result in results.get('features', []):
             yield result
         pageToken = results.get('nextPageToken')
 
     while pageToken:
         print('Loading data for pageToken', pageToken)
-        results = page(table_id, pageToken = pageToken)
+        results = page(table_id, select, pageToken = pageToken)
         for result in results.get('features', []):
             yield result
         pageToken = results.get('nextPageToken')
@@ -127,5 +127,5 @@ def main():
             json.dump(data, open(path, 'x'))
 
 if __name__ == '__main__':
-    head()
-    # main()
+    # head()
+    main()
