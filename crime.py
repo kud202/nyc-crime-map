@@ -48,12 +48,17 @@ def head():
     fn = 'head.geojson'
     if not os.path.exists(fn):
         fp = open(fn, 'xb')
-        r = table_features('MO,YR,geometry,TOT,X,Y', maxResults = 10)
+        r = table_features('YR,MOgeometry,TOT,X,Y', maxResults = 10)
         fp.write(r.content)
         fp.close()
 
-def all_results():
-    pass
+def all_results(pageToken = None):
+    directory = 'all_results'
+    os.makedirs(directory, exists_ok = True)
+    return
+    if not nextPageToken:
+        r = table_features('YR,MO,geometry,TOT,X,Y', maxResults = 1000)
+        json.loads(r.text)
 
 
 if __name__ == '__main__':
