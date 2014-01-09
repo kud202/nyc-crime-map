@@ -14,7 +14,7 @@ def randomsleep():
     'Sleep between zero and 100 seconds.'
     sleep(10 * betavariate(0.7, 8))
 
-def table():
+def table(table_id):
     '''
     This would tell us the schema, among other things.
     https://developers.google.com/maps-engine/documentation/reference/v1/tables#resource
@@ -22,7 +22,7 @@ def table():
 
     raise NotImplementedError('This doesn\'t work.')
 
-    url = 'https://www.googleapis.com/mapsengine/v1/tables/02378420399528461352-11853667273131550346/'
+    url = 'https://www.googleapis.com/mapsengine/v1/tables/%s/' % table_id
     params = {
         'key': KEY,
     }
@@ -33,8 +33,8 @@ def table():
     r = requests.get(url, headers = headers, params = params)
     return r
 
-def table_features(select, where = None, maxResults = 1000, pageToken = None):
-    url = 'https://www.googleapis.com/mapsengine/v1/tables/02378420399528461352-11853667273131550346/features/'
+def table_features(table_id, select, where = None, maxResults = 1000, pageToken = None):
+    url = 'https://www.googleapis.com/mapsengine/v1/tables/%s/features/' % table_id
 
     params = {
         'key': KEY,
@@ -55,11 +55,11 @@ def table_features(select, where = None, maxResults = 1000, pageToken = None):
     r = requests.get(url, headers = headers, params = params)
     return r
 
-def head():
-    fn = 'head.geojson'
+def head(table_id):
+    fn = 'head-%s.geojson' % table_id
     if not os.path.exists(fn):
         fp = open(fn, 'xb')
-        r = table_features('YR,MO,geometry,TOT,X,Y', maxResults = 10)
+        r = table_features(table_id, 'YR,MO,geometry,TOT,X,Y', maxResults = 10)
         fp.write(r.content)
         fp.close()
 
@@ -80,7 +80,7 @@ def page(pageToken = None, crime_type = None):
     if os.path.exists(path):
         return json.load(open(path))
     else:
-        r = table_features('YR,MO,geometry,X,Y,TOT', maxResults = 1000, pageToken = pageToken)
+        r = table_features('0237842G399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR', maxResults = 1000, pageToken = pageToken)
         fp = mkfp(pageToken, crime_type, mode = 'xb')
         fp.write(r.content)
         fp.close()
@@ -113,20 +113,12 @@ def geojson():
     }
 
 def main():
-    for crime_type in [
-        'GRAND LARCENY',
-        'GRAND LARCENY OF MOTOR VEHICLE',
-    ]:
-        for f in features(crime_type = crime_type):
-            pass
-    return
-
-
     path = os.path.join('data','crime.geojson')
     if not os.path.exists(path):
         data = geojson()
         json.dump(data, open(path, 'x'))
 
 if __name__ == '__main__':
-    # head()
-    main()
+    head('02378420399528461352-11853667273131550346')
+    head('02378420399528461352-17772055697785505571')
+    # main()
