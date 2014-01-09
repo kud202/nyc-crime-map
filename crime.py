@@ -55,70 +55,77 @@ def table_features(table_id, select, where = None, maxResults = 1000, pageToken 
     r = requests.get(url, headers = headers, params = params)
     return r
 
-def head(table_id):
-    fn = 'head-%s.geojson' % table_id
-    if not os.path.exists(fn):
-        fp = open(fn, 'xb')
-        r = table_features(table_id, 'YR,MO,geometry,TOT,X,Y', maxResults = 10)
-        fp.write(r.content)
-        fp.close()
-
-def mkpath(pageToken, crime_type):
-    filename = pageToken if pageToken else '__%s__' % (crime_type if crime_type else 'all_CR')
+def mkpath(pageToken, table_id):
+    filename = pageToken if pageToken else '__%s__' % table_id
     return os.path.join(DIRECTORY, filename)
 
-def mkfp(pageToken, crime_type, mode = 'xb'):
-    return open(mkpath(pageToken, crime_type), mode)
+def mkfp(pageToken, table_id, mode = 'xb'):
+    return open(mkpath(pageToken, table_id), mode)
 
-def page(pageToken = None, crime_type = None):
+def page(table_id, select, pageToken = None):
     '''
     Args: A pageToken or None
     Returns: The next pageToken or None
     '''
 
-    path = mkpath(pageToken, crime_type)
+    path = mkpath(pageToken, table_id)
     if os.path.exists(path):
         return json.load(open(path))
     else:
-        r = table_features('0237842G399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR', maxResults = 1000, pageToken = pageToken)
-        fp = mkfp(pageToken, crime_type, mode = 'xb')
+        r = table_features('0237842G399528461352-17772055697785505571', select, maxResults = 1000, pageToken = pageToken)
+        fp = mkfp(pageToken, table_id, mode = 'xb')
         fp.write(r.content)
         fp.close()
         return json.loads(r.text)
 
-def features(startPageToken = None, crime_type = None):
+def features(table_id, select, startPageToken = None):
     os.makedirs(DIRECTORY, exist_ok = True)
 
     if startPageToken:
         pageToken = startPageToken
     else:
         print('Loading data for the inial search, without pageToken')
-        results = page(crime_type = crime_type)
+        results = page(table_id)
         for result in results.get('features', []):
             yield result
         pageToken = results.get('nextPageToken')
 
     while pageToken:
         print('Loading data for pageToken', pageToken)
-        results = page(pageToken = pageToken, crime_type = crime_type)
+        results = page(table_id, pageToken = pageToken)
         for result in results.get('features', []):
             yield result
         pageToken = results.get('nextPageToken')
         randomsleep()
 
-def geojson():
+def geojson(table_id, select):
     return {
         'type': 'FeatureCollection',
-        'features': list(features()),
+        'features': list(features(table_id, select)),
     }
 
+def head():
+    for table_id, select in [
+         ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
+         ('02378420399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR'),
+    ]:
+        fn = 'head-%s.geojson' % table_id
+        if not os.path.exists(fn):
+            fp = open(fn, 'xb')
+            r = table_features(table_id, select, maxResults = 10)
+            fp.write(r.content)
+            fp.close()
+
 def main():
-    path = os.path.join('data','crime.geojson')
-    if not os.path.exists(path):
-        data = geojson()
-        json.dump(data, open(path, 'x'))
+    for table_id, select in [
+         ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
+         ('02378420399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR'),
+    ]:
+        path = os.path.join('data',table_id + '.geojson')
+        if not os.path.exists(path):
+            data = geojson(table_id, select)
+            json.dump(data, open(path, 'x'))
 
 if __name__ == '__main__':
-    head('02378420399528461352-11853667273131550346')
-    head('02378420399528461352-17772055697785505571')
+    head()
     # main()
