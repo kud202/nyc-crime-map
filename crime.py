@@ -44,11 +44,11 @@ def table_features(select, where = None, maxResults = 1000):
 #r = table()
 
 
-def main():
-    fn = 'data.geojson'
+def head():
+    fn = 'head.geojson'
     if not os.path.exists(fn):
         fp = open(fn, 'xb')
-        r = table_features('geometry,TOT,X,Y', maxResults = 1000)
+        r = table_features('MO,YR,geometry,TOT,X,Y', maxResults = 10)
         for c in r.iter_content():
             try:
                 fp.write(c)
@@ -59,4 +59,4 @@ def main():
             fp.close()
 
 if __name__ == '__main__':
-    main()
+    head()
