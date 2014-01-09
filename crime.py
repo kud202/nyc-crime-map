@@ -72,7 +72,7 @@ def page(table_id, select, pageToken = None):
     if os.path.exists(path):
         return json.load(open(path))
     else:
-        r = table_features('0237842G399528461352-17772055697785505571', select, maxResults = 1000, pageToken = pageToken)
+        r = table_features(table_id, select, maxResults = 1000, pageToken = pageToken)
         fp = mkfp(pageToken, table_id, mode = 'xb')
         fp.write(r.content)
         fp.close()
@@ -84,7 +84,7 @@ def features(table_id, select, startPageToken = None):
     if startPageToken:
         pageToken = startPageToken
     else:
-        print('Loading data for the inial search, without pageToken')
+        print('Loading data for the initial search, without pageToken')
         results = page(table_id, select)
         for result in results.get('features', []):
             yield result
