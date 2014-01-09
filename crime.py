@@ -59,7 +59,7 @@ def head():
     fn = 'head.geojson'
     if not os.path.exists(fn):
         fp = open(fn, 'xb')
-        r = table_features('YR,MOgeometry,TOT,X,Y', maxResults = 10)
+        r = table_features('YR,MO,geometry,TOT,CR,X,Y', maxResults = 10)
         fp.write(r.content)
         fp.close()
 
@@ -80,7 +80,7 @@ def page(pageToken = None):
     if os.path.exists(path):
         return json.load(open(path))
     else:
-        r = table_features('YR,MO,geometry,TOT,X,Y', maxResults = 1000, pageToken = pageToken)
+        r = table_features('YR,MO,CR,geometry,X,Y,TOT', maxResults = 1000, pageToken = pageToken)
         fp = mkfp(pageToken, mode = 'xb')
         fp.write(r.content)
         fp.close()
