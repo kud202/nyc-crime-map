@@ -36,7 +36,7 @@ def table_features(select, where = None, maxResults = 1000):
         'Referer':  'http://maps.nyc.gov/crime/',
     }
 
-    r = requests.get(url, headers = headers, params = params, stream = True)
+    r = requests.get(url, headers = headers, params = params)
     return r
 
 
@@ -49,14 +49,12 @@ def head():
     if not os.path.exists(fn):
         fp = open(fn, 'xb')
         r = table_features('MO,YR,geometry,TOT,X,Y', maxResults = 10)
-        for c in r.iter_content():
-            try:
-                fp.write(c)
-            except:
-                fp.close()
-                raise
-        else:
-            fp.close()
+        fp.write(r.content)
+        fp.close()
+
+def all_results():
+    pass
+
 
 if __name__ == '__main__':
     head()
