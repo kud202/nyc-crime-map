@@ -2,10 +2,17 @@
 import os
 import json
 
+from time import sleep
+from random import betavariate
+
 import requests
 
 KEY = 'AIzaSyDW3Wvk6xWLlLI6Bfu29DuDaseX-g18_mo'
 DIRECTORY = 'all_results'
+
+def randomsleep():
+    'Sleep between zero and 100 seconds.'
+    sleep(100 * betavariate(0.7, 8))
 
 def table():
     raise NotImplementedError('This doesn\'t work.')
@@ -78,7 +85,7 @@ def page(pageToken = None):
         fp.close()
         return json.loads(r.text)
 
-def pages(startPageToken = None):
+def features(startPageToken = None):
     os.makedirs(DIRECTORY, exist_ok = True)
 
     if startPageToken:
@@ -94,10 +101,15 @@ def pages(startPageToken = None):
         for result in results.get('features', []):
             yield result
         pageToken = results.get('nextPageToken')
+        randomsleep()
 
 def geojson():
-    pass
+    return {
+        'type': 'FeatureCollection',
+        'features': list(features()),
+    }
 
 if __name__ == '__main__':
     head()
-    p = pages()
+    data = geojson()
+    json.dump(data, open('data.geojson', 'x'))
