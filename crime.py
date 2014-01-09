@@ -80,7 +80,7 @@ def page(pageToken = None):
     if os.path.exists(path):
         return json.load(open(path))
     else:
-        r = table_features('YR,MO,CR,geometry,X,Y,TOT', maxResults = 1000, pageToken = pageToken)
+        r = table_features('YR,MO,geometry,X,Y,CR,TOT', maxResults = 1000, pageToken = pageToken)
         fp = mkfp(pageToken, mode = 'xb')
         fp.write(r.content)
         fp.close()
@@ -113,10 +113,10 @@ def geojson():
     }
 
 def main():
-    fn = 'crime.geojson'
-    if not os.path.exists(fn):
+    path = os.path.join('data','crime.geojson')
+    if not os.path.exists(path):
         data = geojson()
-        json.dump(data, open(fn, 'x'))
+        json.dump(data, open(path, 'x'))
 
 if __name__ == '__main__':
     main()
