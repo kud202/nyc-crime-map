@@ -59,48 +59,48 @@ def head():
     fn = 'head.geojson'
     if not os.path.exists(fn):
         fp = open(fn, 'xb')
-        r = table_features('YR,MO,geometry,TOT,CR,X,Y', maxResults = 10)
+        r = table_features('YR,MO,geometry,TOT,X,Y', maxResults = 10)
         fp.write(r.content)
         fp.close()
 
-def mkpath(pageToken):
-    filename = pageToken if pageToken else '__emptyToken__'
+def mkpath(pageToken, crime_type):
+    filename = pageToken if pageToken else '__%s__' % (crime_type if crime_type else 'all_CR')
     return os.path.join(DIRECTORY, filename)
 
-def mkfp(pageToken, mode = 'xb'):
-    return open(mkpath(pageToken), mode)
+def mkfp(pageToken, crime_type, mode = 'xb'):
+    return open(mkpath(pageToken, crime_type), mode)
 
-def page(pageToken = None):
+def page(pageToken = None, crime_type = None):
     '''
     Args: A pageToken or None
     Returns: The next pageToken or None
     '''
 
-    path = mkpath(pageToken)
+    path = mkpath(pageToken, crime_type)
     if os.path.exists(path):
         return json.load(open(path))
     else:
-        r = table_features('YR,MO,geometry,X,Y,CR,TOT', maxResults = 1000, pageToken = pageToken)
-        fp = mkfp(pageToken, mode = 'xb')
+        r = table_features('YR,MO,geometry,X,Y,TOT', maxResults = 1000, pageToken = pageToken)
+        fp = mkfp(pageToken, crime_type, mode = 'xb')
         fp.write(r.content)
         fp.close()
         return json.loads(r.text)
 
-def features(startPageToken = None):
+def features(startPageToken = None, crime_type = None):
     os.makedirs(DIRECTORY, exist_ok = True)
 
     if startPageToken:
         pageToken = startPageToken
     else:
         print('Loading data for the inial search, without pageToken')
-        results = page()
+        results = page(crime_type = crime_type)
         for result in results.get('features', []):
             yield result
         pageToken = results.get('nextPageToken')
 
     while pageToken:
         print('Loading data for pageToken', pageToken)
-        results = page(pageToken)
+        results = page(pageToken = pageToken, crime_type = crime_type)
         for result in results.get('features', []):
             yield result
         pageToken = results.get('nextPageToken')
@@ -113,10 +113,20 @@ def geojson():
     }
 
 def main():
+    for crime_type in [
+        'GRAND LARCENY',
+        'GRAND LARCENY OF MOTOR VEHICLE',
+    ]:
+        for f in features(crime_type = crime_type):
+            pass
+    return
+
+
     path = os.path.join('data','crime.geojson')
     if not os.path.exists(path):
         data = geojson()
         json.dump(data, open(path, 'x'))
 
 if __name__ == '__main__':
+    # head()
     main()
