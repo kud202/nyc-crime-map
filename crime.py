@@ -130,12 +130,24 @@ def column_names(max_length = 4):
 
 def columns(table_id):
     'Check which column names are present in a table.'
-    fp = open(os.path.join('data','column_names-%s.csv' % table_id), 'x')
-    fp.write('column.name,http.response.code\n')
+    csvfile = os.path.join('data','column_names-%s.csv' % table_id)
+    if os.path.exists(csvfile):
+        fp = open(csvfile, 'r')
+        fp.readline()
+        so_far = set(line.split(',')[0] for line in fp.read().split('\n')[:-1])
+        fp.close()
+
+        fp = open(csvfile, 'a')
+
+    else:
+        fp = open(csvfile, 'x')
+        fp.write('column.name,http.response.code\n')
+
     for c in column_names():
-        r = table_features(table_id, c, maxResults = 0)
-        fp.write('%s,%d\n' % (c, r.status_code))
-        fp.flush()
+        if c not in so_far:
+            r = table_features(table_id, c, maxResults = 0)
+            fp.write('%s,%d\n' % (c, r.status_code))
+            fp.flush()
     fp.close()
 
 def main():
@@ -144,8 +156,8 @@ def main():
          ('02378420399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR'),
     ]:
         head(table_id, select)
-        body(table_id, select)
         columns(table_id)
+        body(table_id, select)
 
 if __name__ == '__main__':
     main()
