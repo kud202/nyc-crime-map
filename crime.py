@@ -121,11 +121,21 @@ def body(table_id, select):
         data = geojson(table_id, select)
         json.dump(data, open(path, 'x'))
 
-def columns(table_id):
-    combinations = itertools.chain(*[itertools.combinations(ascii_uppercase, x) for x in range(1, 4)])
+def column_names(max_length = 4):
+    'Generate a bunch of potential uppercase column names.'
+    combinations = itertools.chain(*[itertools.combinations(ascii_uppercase, x) for x in range(1, max_length)])
     permutations = itertools.chain(*[itertools.permutations(c) for c in combinations])
     strings = (''.join(p) for p in permutations)
     return strings
+
+def columns(table_id):
+    'Check which column names are present in a table.'
+    fp = open(os.path.join('data','column_names-%s.csv' % table_id), 'x')
+    fp.write('column.name,http.response.code\n')
+    for c in column_names():
+        r = table_features(table_id, c, maxResults = 0)
+        fp.write('%s,%d\n' % (c, r.status_code))
+    fp.close()
 
 def main():
     for table_id, select in [
@@ -134,7 +144,7 @@ def main():
     ]:
         head(table_id, select)
         body(table_id, select)
+        columns(table_id)
 
 if __name__ == '__main__':
-    # main()
-    pass
+    main()
