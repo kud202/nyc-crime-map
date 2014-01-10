@@ -135,6 +135,7 @@ def columns(table_id):
     for c in column_names():
         r = table_features(table_id, c, maxResults = 0)
         fp.write('%s,%d\n' % (c, r.status_code))
+        fp.flush()
     fp.close()
 
 def main():
