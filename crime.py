@@ -5,6 +5,9 @@ import json
 from time import sleep
 from random import betavariate
 
+from string import ascii_uppercase
+import itertools
+
 import requests
 
 KEY = 'AIzaSyDW3Wvk6xWLlLI6Bfu29DuDaseX-g18_mo'
@@ -118,6 +121,12 @@ def body(table_id, select):
         data = geojson(table_id, select)
         json.dump(data, open(path, 'x'))
 
+def columns(table_id):
+    combinations = itertools.chain(*[itertools.combinations(ascii_uppercase, x) for x in range(1, 4)])
+    permutations = itertools.chain(*[itertools.permutations(c) for c in combinations])
+    strings = (''.join(p) for p in permutations)
+    return strings
+
 def main():
     for table_id, select in [
          ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
@@ -127,4 +136,5 @@ def main():
         body(table_id, select)
 
 if __name__ == '__main__':
-    main()
+    # main()
+    pass
