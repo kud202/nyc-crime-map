@@ -140,6 +140,7 @@ def columns(table_id):
         fp = open(csvfile, 'a')
 
     else:
+        so_far = set()
         fp = open(csvfile, 'x')
         fp.write('column.name,http.response.code\n')
 
@@ -152,8 +153,8 @@ def columns(table_id):
 
 def main():
     for table_id, select in [
-         ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
          ('02378420399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR'),
+         ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
     ]:
         head(table_id, select)
         columns(table_id)
