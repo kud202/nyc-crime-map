@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import csv
 import os
 import json
 
@@ -151,11 +152,28 @@ def columns(table_id):
             fp.flush()
     fp.close()
 
+def to_csv(table_id, select):
+    path = os.path.join('data',table_id + '.geojson')
+    fieldnames = ['longitude', 'latitude'] + select.split(',')
+    fieldnames.remove('geometry')
+    with open(path, 'w') as fp:
+        w = csv.DictWriter(fp, fieldnames = fieldnames)
+        w.writeheader()
+        for feature in features(table_id, select):
+            row = {
+                'longitude': feature['geometry']['coordinates'][0],
+                'latitude': feature['geometry']['coordinates'][1],
+            }
+            row.update(feature['properties'])
+            w.writerow(row)
+
 def main():
     for table_id, select in [
          ('02378420399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR'),
          ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
     ]:
+        to_csv(table_id, select)
+        continue
         head(table_id, select)
         columns(table_id)
         body(table_id, select)
