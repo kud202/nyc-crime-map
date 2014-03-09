@@ -153,7 +153,7 @@ def columns(table_id):
     fp.close()
 
 def to_csv(table_id, select):
-    path = os.path.join('data',table_id + '.geojson')
+    path = os.path.join('data',table_id + '.csv')
     fieldnames = ['longitude', 'latitude'] + select.split(',')
     fieldnames.remove('geometry')
     with open(path, 'w') as fp:
