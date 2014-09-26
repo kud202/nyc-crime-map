@@ -18,25 +18,6 @@ def randomsleep():
     'Sleep between zero and 100 seconds.'
     sleep(10 * betavariate(0.7, 8))
 
-def table(table_id):
-    '''
-    This would tell us the schema, among other things.
-    https://developers.google.com/maps-engine/documentation/reference/v1/tables#resource
-    '''
-
-    raise NotImplementedError('This doesn\'t work.')
-
-    url = 'https://www.googleapis.com/mapsengine/v1/tables/%s/' % table_id
-    params = {
-        'key': KEY,
-    }
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:24.0) Gecko/20100101 Firefox/24.0',
-        'Referer':  'http://maps.nyc.gov/crime/',
-    }
-    r = requests.get(url, headers = headers, params = params)
-    return r
-
 def table_features(table_id, select, where = None, maxResults = 1000, pageToken = None):
     url = 'https://www.googleapis.com/mapsengine/v1/tables/%s/features/' % table_id
 
@@ -56,6 +37,7 @@ def table_features(table_id, select, where = None, maxResults = 1000, pageToken 
         'Referer':  'http://maps.nyc.gov/crime/',
     }
 
+    randomsleep()
     r = requests.get(url, headers = headers, params = params)
     return r
 
@@ -100,13 +82,6 @@ def features(table_id, select, startPageToken = None):
         for result in results.get('features', []):
             yield result
         pageToken = results.get('nextPageToken')
-        randomsleep()
-
-def geojson(table_id, select):
-    return {
-        'type': 'FeatureCollection',
-        'features': list(features(table_id, select)),
-    }
 
 def head(table_id, select):
     path = 'head-%s.geojson' % table_id
@@ -118,7 +93,10 @@ def head(table_id, select):
 
 def to_geojson(table_id, select):
     path = os.path.join('data',table_id + '.geojson')
-    data = geojson(table_id, select)
+    data = {
+        'type': 'FeatureCollection',
+        'features': list(features(table_id, select)),
+    }
     with open(path, 'w') as fp:
         json.dump(data, fp)
 
@@ -142,8 +120,10 @@ def main():
          ('02378420399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR'),
          ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
     ]:
-        to_csv(table_id, select)
+       #head(table_id, select)
+       #to_csv(table_id, select)
         to_geojson(table_id, select)
+        break
 
 if __name__ == '__main__':
     main()
