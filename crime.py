@@ -116,41 +116,11 @@ def head(table_id, select):
         fp.write(r.content)
         fp.close()
 
-def body(table_id, select):
+def to_geojson(table_id, select):
     path = os.path.join('data',table_id + '.geojson')
     if not os.path.exists(path):
         data = geojson(table_id, select)
         json.dump(data, open(path, 'x'))
-
-def column_names(max_length = 4):
-    'Generate a bunch of potential uppercase column names.'
-    combinations = itertools.chain(*[itertools.combinations(ascii_uppercase, x) for x in range(1, max_length)])
-    permutations = itertools.chain(*[itertools.permutations(c) for c in combinations])
-    strings = (''.join(p) for p in permutations)
-    return strings
-
-def columns(table_id):
-    'Check which column names are present in a table.'
-    csvfile = os.path.join('data','column_names-%s.csv' % table_id)
-    if os.path.exists(csvfile):
-        fp = open(csvfile, 'r')
-        fp.readline()
-        so_far = set(line.split(',')[0] for line in fp.read().split('\n')[:-1])
-        fp.close()
-
-        fp = open(csvfile, 'a')
-
-    else:
-        so_far = set()
-        fp = open(csvfile, 'x')
-        fp.write('column.name,http.response.code\n')
-
-    for c in column_names():
-        if c not in so_far:
-            r = table_features(table_id, c, maxResults = 0)
-            fp.write('%s,%d\n' % (c, r.status_code))
-            fp.flush()
-    fp.close()
 
 def to_csv(table_id, select):
     path = os.path.join('data',table_id + '.csv')
@@ -173,10 +143,7 @@ def main():
          ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
     ]:
         to_csv(table_id, select)
-        continue
-        head(table_id, select)
-        columns(table_id)
-        body(table_id, select)
+        to_geojson(table_id, select)
 
 if __name__ == '__main__':
     main()
