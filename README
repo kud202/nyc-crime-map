@@ -1,5 +1,5 @@
 Get data from the `NYC Crime Map <http://maps.nyc.gov/crime/>`_,
-and save them as geojson files.
+and save them as geojson and CSV files.
 
 Getting data I have already saved
 ================================================
