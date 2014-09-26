@@ -118,9 +118,9 @@ def head(table_id, select):
 
 def to_geojson(table_id, select):
     path = os.path.join('data',table_id + '.geojson')
-    if not os.path.exists(path):
-        data = geojson(table_id, select)
-        json.dump(data, open(path, 'x'))
+    data = geojson(table_id, select)
+    with open(path, 'w') as fp:
+        json.dump(data, fp)
 
 def to_csv(table_id, select):
     path = os.path.join('data',table_id + '.csv')
