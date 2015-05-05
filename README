@@ -4,7 +4,7 @@ and save them as geojson and CSV files.
 Getting data I have already saved
 ================================================
 If you just want to get the data in geojson or CSV format, go to
-http://small.dada.pink/nyc-crime-map-data/.
+http://dada.pink/nyc-crime-map-data/.
 
 Running the program
 ========================================
@@ -53,3 +53,5 @@ The data are stored in two tables.
 
 The latter of these tables contains a "CR" field for the crime type;
 the former does not.
+
+Read at http://thomaslevine.com/!/nyc-crime-map/.
