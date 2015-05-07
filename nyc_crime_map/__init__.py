@@ -19,9 +19,6 @@ def cli():
          ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
     ]:
         data = nyc_crime_map(table_id, select)
-        head(table_id, select)
-        to_csv(table_id, select)
-        to_geojson(table_id, select)
 
 if __name__ == '__main__':
     main()
