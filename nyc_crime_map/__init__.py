@@ -45,5 +45,3 @@ def cli():
             logger.info('Generating %s' % f.__name__)
             with open('%s.%s' % (basename, f.__name__), 'w') as fp:
                 f(select, data, fp)
-
-cli()
