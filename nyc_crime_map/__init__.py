@@ -1,10 +1,9 @@
-import os
-from logging import getLogger
+import os, logging
 
 from .download import table_features_first, table_features_tail
 from .serialize import geojson, csv
 
-logger = getLogger(__name__)
+logger = logging.getLogger('nyc-crime-map')
 
 def nyc_crime_map(table_id, select, startPageToken = None):
     if startPageToken:
@@ -22,9 +21,9 @@ def nyc_crime_map(table_id, select, startPageToken = None):
         pageToken = results.get('nextPageToken')
 
 def cli(output_directory = 'data'):
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     fp_stream = logging.StreamHandler()
-    fp_stream.setLevel(logging.ERROR)
+    fp_stream.setLevel(logging.INFO)
     logger.addHandler(fp_stream)
 
     logger.info('Beginning run')
