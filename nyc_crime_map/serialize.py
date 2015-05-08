@@ -1,16 +1,13 @@
-import json
-import vlermv
+import json, csv
 
-vlermv.Vlermv(output_directory, serializer = json)
-
-def to_geojson(obj, fp):
+def geojson(_, obj, fp):
     data = {
         'type': 'FeatureCollection',
         'features': obj,
     }
     json.dump(data, fp)
 
-def to_csv(select, obj, fp):
+def csv(select, obj, fp):
     fieldnames = ['longitude', 'latitude'] + select.split(',')
     fieldnames.remove('geometry')
 

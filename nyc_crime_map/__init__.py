@@ -1,3 +1,7 @@
+from logging import getLogger
+
+logger = getLogger(__name__)
+
 def nyc_crime_map(table_id, select, startPageToken = None):
     if startPageToken:
         pageToken = startPageToken
@@ -19,6 +23,9 @@ def cli():
          ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
     ]:
         data = nyc_crime_map(table_id, select)
+        basename = os.path.join('data', table_id)
+        for f in serializers:
+            with open('%s.%s' % (basename, f.name), 'w') as fp:
+                f(select, data, fp)
 
-if __name__ == '__main__':
-    main()
+cli()
