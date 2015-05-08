@@ -21,14 +21,22 @@ def nyc_crime_map(table_id, select, startPageToken = None):
         yield from results.get('features', [])
         pageToken = results.get('nextPageToken')
 
-def cli():
+def cli(output_directory = 'data'):
+    logger.setLevel(logging.DEBUG)
+    fp_stream = logging.StreamHandler()
+    fp_stream.setLevel(logging.ERROR)
+    logger.addHandler(fp_stream)
+
+    logger.info('Beginning run')
     for table_id, select in [
          ('02378420399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR'),
          ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
     ]:
+        logger.info('Starting on table %s with query %s' % (table_id, select))
         data = nyc_crime_map(table_id, select)
-        basename = os.path.join('data', table_id)
+        basename = os.path.join(output_directory, table_id)
         for f in [geojson, csv]:
+            logger.info('Generating %s' % f.__name__)
             with open('%s.%s' % (basename, f.__name__), 'w') as fp:
                 f(select, data, fp)
 
