@@ -18,7 +18,9 @@ setup(
         'Programming Language :: Python :: 3.4',
     ],
 )
-print('''Use nyc-crime-map like so.
+print('''
+
+You have installed the crime map downloader! Use it like so.
 
     nyc-crime-map
 
