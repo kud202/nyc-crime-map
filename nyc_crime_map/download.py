@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-import logging
+import logging, os
 
-import vlermv
-import requests
+import vlermv, requests
 
 logger = logging.getLogger(__name__)
 DIR = os.path.expanduser('~/.nyc-crime-map')
@@ -15,11 +14,11 @@ def page(table_id, select, pageToken = None):
     r = table_features(table_id, select)
 
 @vlermv.archive(parent_directory = DIR)
-def table_features_tailpage(table_id, select, pageToken):
+def table_features_tail(table_id, select, pageToken):
     return _table_features(table_id, select, pageToken)
 
 @vlermv.archive(parent_directory = DIR)
-def table_features_firstpage(table_id, select):
+def table_features_first(table_id, select):
     return _table_features(table_id, select, None)
 
 def _table_features(table_id, select, pageToken, where = None, maxResults = 1000,

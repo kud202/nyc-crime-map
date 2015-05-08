@@ -1,4 +1,8 @@
+import os
 from logging import getLogger
+
+from .download import table_features_first, table_features_tail
+from .serialize import geojson, csv
 
 logger = getLogger(__name__)
 
@@ -24,8 +28,8 @@ def cli():
     ]:
         data = nyc_crime_map(table_id, select)
         basename = os.path.join('data', table_id)
-        for f in serializers:
-            with open('%s.%s' % (basename, f.name), 'w') as fp:
+        for f in [geojson, csv]:
+            with open('%s.%s' % (basename, f.__name__), 'w') as fp:
                 f(select, data, fp)
 
 cli()
