@@ -1,4 +1,4 @@
-import json, csv
+import json, csv as _csv
 
 def geojson(_, obj, fp):
     data = {
@@ -11,7 +11,7 @@ def csv(select, obj, fp):
     fieldnames = ['longitude', 'latitude'] + select.split(',')
     fieldnames.remove('geometry')
 
-    w = csv.DictWriter(fp, fieldnames = fieldnames)
+    w = _csv.DictWriter(fp, fieldnames = fieldnames)
     w.writeheader()
     for feature in obj:
         row = {

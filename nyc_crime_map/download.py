@@ -3,7 +3,7 @@ import logging, os
 
 import vlermv, requests
 
-logger = logging.getLogger('nyc-crime-map')
+logger = logging.getLogger('nyc_crime_map')
 DIR = os.path.expanduser('~/.nyc-crime-map')
 @vlermv.archive(parent_directory = DIR)
 def page(table_id, select, pageToken = None):
