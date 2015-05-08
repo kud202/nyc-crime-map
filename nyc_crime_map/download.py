@@ -5,13 +5,6 @@ import vlermv, requests
 
 logger = logging.getLogger('nyc_crime_map')
 DIR = os.path.expanduser('~/.nyc-crime-map')
-@vlermv.archive(parent_directory = DIR)
-def page(table_id, select, pageToken = None):
-    '''
-    Args: A pageToken or None
-    Returns: The next pageToken or None
-    '''
-    r = table_features(table_id, select)
 
 @vlermv.archive(parent_directory = DIR)
 def table_features_tail(table_id, select, pageToken):

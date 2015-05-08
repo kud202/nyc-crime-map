@@ -1,4 +1,4 @@
-import argparse, datetime
+import argparse, datetime, os
 
 default = os.path.join('./data', datetime.date.today().isoformat())
 parser = argparse.ArgumentParser(description='Download crime data from the NYC Crime Map')

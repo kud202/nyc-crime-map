@@ -12,7 +12,7 @@ setup(
     packages = ['nyc_crime_map'],
     install_requires = [
         'requests>=2.3.0',
-        'vlermv>=1.2.0',
+        'vlermv>=1.2.1',
     ],
     classifiers=[
         'Programming Language :: Python :: 3.4',

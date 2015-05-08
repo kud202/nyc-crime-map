@@ -30,6 +30,9 @@ def cli():
         fp_stream.setLevel(logging.INFO)
         logger.addHandler(fp_stream)
 
+    if not os.path.isdir(args.directory):
+        os.makedirs(args.directory, exist_ok = True)
+
     logger.info('Beginning run')
     for table_id, select in [
          ('02378420399528461352-17772055697785505571', 'YR,MO,geometry,X,Y,TOT,CR'),
