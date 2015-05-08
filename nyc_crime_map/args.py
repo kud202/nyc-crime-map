@@ -1,5 +1,6 @@
-import argparse
-default = './data'
+import argparse, datetime
+
+default = os.path.join('./data', datetime.date.today().isoformat())
 parser = argparse.ArgumentParser(description='Download crime data from the NYC Crime Map')
 parser.add_argument('-v', '--verbose', action = 'store_true',
                     help = 'Pass this flag to turn on debugging output.')
