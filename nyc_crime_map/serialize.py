@@ -3,7 +3,7 @@ import json, csv as _csv
 def geojson(_, obj, fp):
     data = {
         'type': 'FeatureCollection',
-        'features': list(obj),
+        'features': obj,
     }
     json.dump(data, fp)
 

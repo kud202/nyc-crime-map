@@ -39,7 +39,7 @@ def cli():
          ('02378420399528461352-11853667273131550346', 'YR,MO,geometry,X,Y,TOT'),
     ]:
         logger.info('Starting on table %s with query %s' % (table_id, select))
-        data = nyc_crime_map(table_id, select)
+        data = list(nyc_crime_map(table_id, select))
         basename = os.path.join(args.directory, table_id)
         for f in [geojson, csv]:
             logger.info('Generating %s' % f.__name__)
