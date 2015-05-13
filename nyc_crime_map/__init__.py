@@ -1,4 +1,4 @@
-import os, logging, argparse
+import os, logging
 
 from .download import table_features_first, table_features_tail
 from .serialize import geojson, csv
