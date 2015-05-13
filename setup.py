@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'nyc-crime-map',
-    version = '0.3.1',
+    version = '0.3.2',
     description = 'Get data from the crime map',
     author = 'Thomas Levine',
     author_email = '_@thomaslevine.com',
