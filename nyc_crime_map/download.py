@@ -6,11 +6,11 @@ import vlermv, requests
 logger = logging.getLogger('nyc_crime_map')
 DIR = os.path.expanduser('~/.nyc-crime-map')
 
-@vlermv.cache(DIR)
+@vlermv.cache(DIR, 'tail')
 def table_features_tail(_, table_id, select, pageToken):
     return _table_features(table_id, select, pageToken)
 
-@vlermv.cache(DIR)
+@vlermv.cache(DIR, 'first')
 def table_features_first(_, table_id, select):
     return _table_features(table_id, select, None)
 
